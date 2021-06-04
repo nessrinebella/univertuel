@@ -1,0 +1,29 @@
+{% extends 'platform/member/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/member/game/game_homepage.css') }}"> 
+{% endblock %}
+
+
+{% block main_member_section %}
+	<div id=layout_game>	
+		<div><a href="{{ path('game_new') }}">nouveau jeux</a>
+			<a href="{{ path('category_game_new') }}">nouvelle catégorie</a>
+		</div>
+		
+		<div>
+		jeux disponibles
+		{% for game in games %}
+			<a href="{{path('game_edit', {'id': game.id})}}">{{game.code}}</a>
+		{% endfor %}
+		</div>
+		
+		
+	</div>
+{% endblock %}
+
+
+
+
+        

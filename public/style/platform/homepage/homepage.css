@@ -1,0 +1,177 @@
+@charset "UTF-8";
+
+#presentation_section
+{
+	color:white;
+	display:flex;
+	flex-direction:column;
+}
+
+#description
+{
+	flex:4;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+}
+
+#registrate
+{
+	flex:2;
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	width:100%;
+	height:100%;
+}
+
+#registrate a
+{
+width:20%;
+}
+
+#registrate a button
+{
+	background-color:#EDCF40;
+	height:30%;
+	width:100%;
+
+}
+
+/***********************************************************/
+
+#news_section
+{
+	min-height:500px;
+	background-color:#eeeeec;
+}
+
+#news_section_layout
+{
+	display:flex;
+	flex-direction:row;
+	justify-content:space-around;
+}
+
+#section_title h2
+{
+	margin-left:5%;
+	text-transform:capitalize;
+}
+
+.news
+{
+	border:solid 1px;
+	display:flex;
+	flex-direction:column;
+}
+
+#news_title
+{
+	border:solid;
+	flex:1;
+	background-color:black;
+	opacity:0.5;
+	color:white;
+	text-align:center;
+}
+
+#news_resume
+{
+	flex:9;
+	border:solid;
+	color:white;
+}
+
+#read_more
+{
+	flex:1;
+	border:solid;
+}
+
+#read_more a button
+{
+	width:100%;
+	background-color:#0b75f5;
+	color:white;
+	height:100%;
+}
+
+/***********************************************************/
+
+#features_section
+{
+	margin-bottom:2%;
+}
+
+#layout_blocs
+{
+	display:flex;
+	flex-direction:row;
+}
+
+.bloc
+{
+	flex:1;
+	color:white;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+}
+
+.features_list
+{
+	opacity:0.5;
+	background-color:black;
+	min-height:50%;
+	list-style:circle;
+	display:flex;
+	flex-direction:column;
+	align-items:left;
+	justify-content:space-around;
+}
+
+.features_list h3
+{
+	font-weight:900;
+}
+
+#master
+{
+	display:flex;
+	flex-direction:column;
+	justify-content:flex-end;
+}
+
+#features_community_zone
+{
+	display:flex;
+	flex-direction:row;
+	background-color:#6b5545;
+	color:white;
+	font-size:1.3em;
+}
+
+#features_community_zone p
+{
+	flex:1;
+	text-align:right;
+	padding-right :2%;
+	font-weight:900;
+}
+
+#features_community_zone a
+{
+	flex:1;
+	padding-left :2%;
+}
+
+#features_community_zone a button
+{
+	height:100%;
+	width:50%;
+	background-color:#EDCF40;
+	font-size:1.3em;
+}
+

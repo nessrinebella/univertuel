@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+#main_section
+{
+	align-items:center;
+	justify-content:center;
+	background-color:#927662;
+}
+
+#section_layout
+{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:flex-start;
+	width:50%;
+}
+
+h1
+{
+	margin:5% 0% 5% 0%;
+}
+
+form
+{
+	border:solid 1px #927662;
+	box-shadow:10px 10px 10px white;
+	opacity:0.5;
+	background-color:black;
+	color:white;
+	width:70%;
+	font-size:1.1em;
+	display:flex;
+	flex-direction:column;
+	height:60%;
+	justify-content:space-around;
+	padding:1%;
+}
+
+form div
+{
+	display:flex;
+	flex-direction:row;
+}
+
+form div label
+{
+	flex:3;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+}
+
+form div input
+{
+	flex:2;
+}
+
+#see_conditions, #see_conditions:visited
+{
+	color:white;
+}
+
+form div button
+{
+	width:40%;
+	background-color:#EDCF40;
+	opacity:1;
+	height:100%;
+	font-weight:500;
+} 
+
+
+

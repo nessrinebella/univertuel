@@ -1,0 +1,37 @@
+{% extends 'platform/member/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/member/campaign/homepage.css') }}"> 
+{% endblock %}
+
+
+{% block main_member_section %}
+
+	<div>
+		<a href="{{path('campaign_new')}}">nouvelle campagne</a>
+		<a href="path('campaign_find')">rechercher une campagne</a>
+		
+	</div>
+	
+	<div>
+		demandes d'invitation reçues
+	</div>
+	
+	<div>
+
+		{% for campaign in campaigns %}
+			<a href="{{path('campaign_view', {'id': campaign.id})}}">{{campaign.code}}</a>
+		{% endfor %}
+		
+	</div>
+	
+	{% block campaign %}
+	{% endblock %}
+	
+{% endblock %}
+
+
+	
+
+        

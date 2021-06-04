@@ -1,0 +1,64 @@
+{% extends 'platform/base/base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/security/form_login.css') }}"> 
+{% endblock %}
+
+{% block main_section %}
+
+<div id="section_layout"  
+	style="background-image: url( {{ asset ('images/platform/security/form_login1.jpg') }});
+	min-height:480px;background-repeat:repeat;background-size:cover;height:100%; ">
+
+	<h1>connexion</h1>
+	
+<form method="post">
+    
+        {% if app.user %}
+        
+            <div class="mb-3">
+                You are logged in as {{ app.user.login }}, <a href="{{ path('logout') }}">Logout</a>
+            </div>
+            
+        {% endif %}
+	
+        <div>
+        	<label for="inputEmail">email</label><input type="email" value="" name="email" id="inputEmail" class="form-control" required autofocus>
+        </div>
+        <div>
+        	<label for="inputPassword">password</label><input type="password" name="password" id="inputPassword" class="form-control" required>
+        </div>
+    
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    
+        {#
+            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+            See https://symfony.com/doc/current/security/remember_me.html
+    
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Remember me
+                </label>
+            </div>
+        #}
+    
+        <div><button  type="submit">
+            connexion
+        	</button>
+        </div>  
+	</form>
+	
+         {% if error %}
+            
+                <div class="form_alert">
+                    <p>les identifiants ne correspondent pas à un compte valide</p>
+                </div>
+                <div id="login_other_options"><a href={{ path('register') }}>creer un compte</a><a href="">mot de passe oublié</a></div>
+                
+    	{% endif %}
+	
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'platform/base/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/member/base.css') }}"> 
+{% endblock %}
+
+
+{% block main_section %}
+
+<div id="member_section">
+	<nav id="tool_bar">
+		{% if is_granted ('ROLE_MEMBER') %}
+		
+		<ul class="menu_item">
+			<li><a href="">espace membre</a>
+				<ul class="menu_item_elements">
+					<li><a href="">profil</a></li>
+					<li><a href="{{ path('member_messages') }}">messages</a></li>
+					<li><a href="">contacts</a></li>
+					<li><a href="{{path('campaign_homepage')}}">campagnes</a></li>
+					<li><a href="">personnages</a></li>
+				</ul>
+			</li>		
+		</ul>
+
+	{% endif %}
+	
+	{% if is_granted ('ROLE_WRITER') %}
+	
+	<ul class="menu_item">
+		<li><a href="">rédaction</a>
+			<ul class="menu_item_elements">
+				<li><a href="">articles</a></li>
+			</ul>
+		</li>	
+	</ul>
+
+	{% endif %}
+	
+	{% if is_granted ('ROLE_ADMIN') %}
+
+	<ul class="menu_item">
+		<li><a href="">administration</a>
+			<ul class="menu_item_elements">
+				<li><a href="">permissions</a></li>
+				<li><a href=>actualités</a></li>
+				<li><a href="{{ path('game_homepage') }}">jeux</a></li>	
+			</ul>
+		</li>		
+	</ul>
+	
+	{% endif %}
+	
+	{% if is_granted ('ROLE_SADMIN') %}
+	
+	<ul class="menu_item">
+		<li><a href="">application</a>
+			<ul class="menu_item_elements">
+				<li><a href= title="aller à la section 1">paramètres</a></li>
+				<li><a href="#" title="aller à la section 1">rapports</a></li>
+	  		</ul>
+	  	</li>	
+	</ul>
+
+	{% endif %}
+	</nav>
+	
+
+
+	{% block main_member_section %}
+	
+	{% endblock %}
+</div>
+{% endblock %}
+
+	
+
+        

@@ -1,0 +1,19 @@
+{% extends 'platform/member/campaign/homepage.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/member/campaign/form_campaign_new.css') }}"> 
+{% endblock %}
+
+{% block campaign %}
+<div>	
+	{{form(form)}}
+</div>
+{% endblock %}
+	
+
+
+
+	
+
+        

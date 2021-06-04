@@ -1,3 +1,116 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+
+app_homepage:
+    path: /
+    controller: App\Controller\Platform\PlatformController::homepageView   
+    
+register:
+    path: /register
+    controller: App\Controller\RegistrationController::register    
+    
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login  
+    
+app_logout:
+    path: /logout
+    
+app_forbidden:
+    path: /forbidden
+    controller: App\Controller\Platform\PlatformController::forbiddenView   
+    
+
+################################################################################
+
+member_dashboard:
+    path: /member/dashboard
+    controller: App\Controller\Platform\PlatformController::memberHomepageView
+
+################################################################################
+
+member_messages:
+    path: /member/message/messages
+    controller: App\Controller\Platform\Message\MessageController::messagesView
+    
+message_new:
+    path: /member/message/message-new
+    controller: App\Controller\Platform\Message\MessageController::messageNew  
+    
+message_delete:      
+    path: /member/message{id}/message-delete
+    controller: App\Controller\Platform\Message\MessageController::messageDelete
+    
+message_response:
+    path: /member/message/message-response/{id}
+    controller: App\Controller\Platform\Message\MessageController::messageResponse
+    
+send_campaign_invitation:
+    path: /member/campaign/{id}/send-invitation
+    controller: App\Controller\Platform\Message\MessageController::sendCampaignInvitation
+
+ask_campaign_invitation:
+    path: /member/campaign/{id}/ask-invitation
+    controller: App\Controller\Platform\Message\MessageController::askCampaignInvitation
+    
+################################################################################   
+game_homepage:
+    path: /admin/game/homepage
+    controller: App\Controller\Univertuel\Game\GameController::gameHomepageView
+    
+game_new:
+    path: /admin/game/new
+    controller: App\Controller\Univertuel\Game\GameController::gameNew
+    
+category_game_new:
+    path: /admin/game/category/new
+    controller: App\Controller\Univertuel\Game\GameController::categoryNew
+            
+game_edit:
+    path: /admin/game/{id}/edit
+    controller: App\Controller\Univertuel\Game\GameController::gameEdit
+        
+################################################################################     
+prophecy_edit_game_element:
+    path: /admin/prophecy/game/edit/{id}
+    controller: App\Controller\Univertuel\Game\GameController::gameEditElement
+
+################################################################################
+campaign_homepage:
+    path: /member/campaign/homepage
+    controller: App\Controller\Univertuel\Campaign\CampaignController::campaignHomepageView
+
+campaign_view:
+    path: /member/campaign/{id}/view
+    controller: App\Controller\Univertuel\Campaign\CampaignController::campaignView
+
+campaign_desciption_view:
+    path: /member/campaign/{id}/description
+    controller: App\Controller\Univertuel\Campaign\CampaignController::campaignDescriptionView
+
+campaign_new:
+    path: /member/campaign/new
+    controller: App\Controller\Univertuel\Campaign\CampaignController::campaignNew
+
+################################################################################
+sheet_new:
+    path: /member/campaign/{id}/sheet/{user}/new
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetNew
+
+sheet_new_step2:
+    path: /member/campaign/{id}/sheet/{id_sheet}/step2
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetStep2
+    
+sheet_new_step3:
+    path: /member/campaign/{id}/sheet/{id_sheet}/step3
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetStep3
+
+sheet_new_step4:
+    path: /member/campaign/{id}/sheet/{id_sheet}/step4
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetStep4   
+    
+sheet_select_caracteristics:
+    path: /member/campaign/{id}/sheet/{id_sheet}/select-caracteristics
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetSelectCaracteristics
+
+
+ 
+ 

@@ -1,0 +1,60 @@
+{% extends 'platform/member/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/univertuel/prophecy/prophecy_admin_homepage.css') }}"> 
+{% endblock %}
+
+
+{% block main_member_section %}
+	<div id=layout_game>	
+	
+	<div>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Advantage'})}}">avantages</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Disadvantage'})}}">inconvenients</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Discipline'})}}">disciplines</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'MagicDomain'})}}">domaines de magie</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Spell'})}}">sortilèges</a>
+	</div>
+	
+	<div>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Age'})}}">age</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'AgeCarac'})}}">modificateurs d'age</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Country'})}}">pays d'origine</a>
+			<a href="{{path('prophecy_edit_game_element', {'id': 'Caste'})}}">caste</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'MagicMana'})}}">reserve de magie</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Omen'})}}">augure</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Skill'})}}">compétences</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Attribute'})}}">Attribut majeur</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Caracteristic'})}}">caractéristique</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'StatisticCategory'})}}">catégories de statistiques!!!A SUPPRIMER</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Statistic'})}}">élément statistique!!!A SUPPRIMER</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Tendency'})}}">tendance</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Wounds'})}}">blessure</a>
+	</div>
+	
+	
+	<div>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'ArmorCategory'})}}">categories d'armures</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Armor'})}}">armures</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'WeaponCategory'})}}">catégories d'armes</a>
+		<a>capacités spéciales d'armes</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'CombatWeapon'})}}">armes de corps à corps</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'HastWeapon'})}}">armes d'hast</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'RangeWeapon'})}}">armes à distance</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Currency'})}}">monnaie</a>
+		<a href="{{path('prophecy_edit_game_element', {'id': 'Various'})}}">divers</a>
+	</div>
+	
+	page admin prophecy
+	
+	{% block edit_game %}
+	{% endblock %}	
+		
+	</div>
+{% endblock %}
+
+
+
+
+        

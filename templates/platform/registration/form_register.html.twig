@@ -1,0 +1,34 @@
+{% extends 'platform/base/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/registration/form_register.css') }}"> 
+{% endblock %}
+
+{% block main_section %}
+
+	<div id="section_layout"  
+	style="background-image: url( {{ asset ('images/platform/registration/form_registration.jpg') }});
+	min-height:480px;background-repeat:repeat;background-size:cover;height:100%; ">
+	
+	 <h1>Register</h1>
+	
+	    {{ form_start(registrationForm) }}
+	        {{ form_row(registrationForm.email, {label: 'email'}) }}
+	        {{ form_row(registrationForm.login, {label: 'identifiant'}) }}
+	        {{ form_row(registrationForm.password, {label: 'mot de passe'}) }}
+	        {{ form_row(registrationForm.agreeTerms, {label: 'accepter les conditions d\'utilisation'}) }}
+			<div><a href="" target="_blank" id="see_conditions">cliquez pour voir les conditions</a></div>
+	        <div><button type="submit" class="btn" >créer le compte</button></div>
+	    {{ form_end(registrationForm) }}
+	</div>
+	
+	{% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+
+

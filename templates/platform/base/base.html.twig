@@ -1,0 +1,54 @@
+{% extends 'base/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/base/base.css') }}"> 
+{% endblock %}
+
+{% block body %}
+
+	<div id="main_layout">
+        
+       <header id="main_header">
+			<span id="language">
+				français |
+			</span>
+			
+			<nav id="navigation">
+				<ul>
+					<li><a href="{{ path('app_homepage') }}">accueil</a></li>
+					<li>actualités</li>
+					<li>articles</li>
+					<li>contact</li>
+				</ul>
+			</nav>
+			
+			{% if app.user %}
+			<span id="login">
+			<a href="{{ path('member_dashboard') }}">{{app.user.login}}</a> <a href="{{path('app_logout')}}">deconnexion</a>
+			</span>
+		
+			{% else %}
+			<span id="connexion">
+				<a href="{{ path('app_login') }}"><button>connexion</button></a>
+			</span>
+			{% endif %}
+
+		</header>
+        	
+        <div id="main_section">
+        	{% block main_section %}
+      
+        	{% endblock %}
+        </div>
+        	
+        <footer id="main_footer">
+        	<span>
+				<p>projet dévelloppé par univertuel-worlds avec l'aimable participation de Codev-Studio</p>
+				<p>Powered by Symfony</p>
+			</span>
+        </footer>
+        	
+	</div>
+
+{% endblock %}

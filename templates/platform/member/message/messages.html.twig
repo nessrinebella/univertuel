@@ -1,0 +1,40 @@
+{% extends 'platform/member/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/platform/member/message/messages.css') }}"> 
+{% endblock %}
+
+
+{% block main_member_section %}
+<div id="messages_layout">
+
+	<div class="container_line" id="button_zone">
+	 		<a href={{ path('message_new') }}  ><button id="button">nouveau message</button></a>
+	</div>
+	
+		{% if messages|length > 0  %}
+		    {% for message in messages %}
+		    	<div class="widget_thread">
+		    		<div>
+			    		<div><a  href="{{ path('message_response', {'id': message.id}) }}">{{ message.purpose }}</a></div>
+			    		<div>participants : {{message.sender.login}} et {{message.receiver.login}}</div>
+		    		</div>
+		    		<div id="delete"><a href={{ path('message_delete', {'id': message.id}) }}>supprimer</a></div>
+		    	</div>
+				
+		    {% endfor %}
+		    
+		    
+		{% else %}
+			<div>
+				<p>vous n'avez aucun message</p>
+			</div>
+		{% endif %}	
+</div>	
+{% endblock %}
+
+
+
+
+        

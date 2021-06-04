@@ -1,0 +1,22 @@
+{% extends 'platform/member/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset ('style/member/figure/homepage.css') }}"> 
+{% endblock %}
+
+
+{% block main_member_section %}
+	
+	<div>
+		{# for figure in figures#}
+		<a href="{{path('campaign_view', {'id':campaign.id})}}">{{figure.code}}</a>
+		{# endfor #}
+	</div>
+	
+{% endblock %}
+
+
+	
+
+        
