@@ -288,8 +288,15 @@ class SheetController extends AbstractController
         $sheet = $sheetRepository->find($id_sheet);
         $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
         $sheetCaracteristics = $sheetCaracteristicsRepository->findBy(['sheet' => $sheet]);
-        $form = $this->createForm(SheetCaracteristicsFormType::class, $sheetCaracteristics);
-        if($form->isSubmitted() && $forms->isValid())
+
+        foreach ($sheetCaracteristics as $carac)
+        {
+            $sheet->addCaracteristic($carac);
+        }
+        
+        
+        //$form = $this->createForm(SheetCaracteristicsFormType::class, $sheetCaracteristics);
+        //if($form->isSubmitted() && $forms->isValid())
         {
             //$em = $this->getDoctrine()->getManager();
             //$em->persist($sheet);
@@ -299,7 +306,7 @@ class SheetController extends AbstractController
         
         
         
-        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['forms' => $forms->createView()]);
+        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['sheet' => $sheetCaracteristics]);
     }
     
     

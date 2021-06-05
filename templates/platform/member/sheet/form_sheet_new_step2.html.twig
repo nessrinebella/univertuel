@@ -14,7 +14,10 @@
 	<a href="">etape 1</a><a href="">etape2</a><a href="">etape 3</a><a href="">etape4</a>
 </div>
 
-{{form(form)}}
+{% for carac in sheet %}
+{{carac}}{{ carac.value}}
+{% endfor %}	
+
 	
 {% endblock %}
 

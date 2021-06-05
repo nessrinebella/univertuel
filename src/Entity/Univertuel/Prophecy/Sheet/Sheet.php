@@ -420,7 +420,7 @@ class Sheet
     }
     
     
-    public function getCaracteristics(): ?SheetCaracteristics
+    public function getCaracteristics(): ?ArrayCollection 
     {
         return $this->caracteristics;
     }
@@ -456,7 +456,7 @@ class Sheet
         $this->caste = $caste;
     }
     
-    public function addCaracteristic($element)
+    public function addCaracteristic(SheetCaracteristics $element)
     {
         if(!$this->caracteristics->contains($element))
         {
@@ -464,7 +464,7 @@ class Sheet
         }
     }
     
-    public function removeCaracteristic($element)
+    public function removeCaracteristic(SheetCaracteristics $element)
     {
         if($this->caracteristics->contains($element))
         {
