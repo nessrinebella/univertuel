@@ -2,17 +2,18 @@
 
 namespace App\Entity\Univertuel\Prophecy\Sheet;
 
-use App\Repository\Univertuel\Prophecy\Sheet\SheetRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Entity\Univertuel\Campaign\Campaign;
-use App\Entity\Univertuel\Prophecy\Game\Stat\Country;
-use App\Entity\Univertuel\Prophecy\Game\Stat\Omen;
 use App\Entity\User\User;
-use App\Entity\Univertuel\Prophecy\Game\Capacity\Discipline;
-use App\Entity\Univertuel\Prophecy\Game\Item\Various;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Univertuel\Campaign\Campaign;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Univertuel\Prophecy\Game\Stat\Omen;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Caste;
+use App\Entity\Univertuel\Prophecy\Game\Item\Various;
+use App\Entity\Univertuel\Prophecy\Game\Stat\Country;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic;
+use App\Entity\Univertuel\Prophecy\Game\Capacity\Discipline;
+use App\Repository\Univertuel\Prophecy\Sheet\SheetRepository;
 
 /**
  * @ORM\Entity(repositoryClass=SheetRepository::class)
@@ -420,7 +421,7 @@ class Sheet
     }
     
     
-    public function getCaracteristics(): ?ArrayCollection 
+    public function getCaracteristics(): ?ArrayCollection
     {
         return $this->caracteristics;
     }
@@ -456,7 +457,7 @@ class Sheet
         $this->caste = $caste;
     }
     
-    public function addCaracteristic(SheetCaracteristics $element)
+    public function addCaracteristic($element)
     {
         if(!$this->caracteristics->contains($element))
         {
@@ -464,11 +465,16 @@ class Sheet
         }
     }
     
-    public function removeCaracteristic(SheetCaracteristics $element)
+    public function removeCaracteristic($element)
     {
         if($this->caracteristics->contains($element))
         {
             $this->caracteristics->remove($element);
         }
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

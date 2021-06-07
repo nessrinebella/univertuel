@@ -2,36 +2,37 @@
 
 namespace App\Controller\Univertuel\Sheet;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Univertuel\Prophecy\Sheet\Sheet;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Entity\Univertuel\Prophecy\Sheet\Sheet;
-use App\Form\Univertuel\Prophecy\Sheet\SheetFormType;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetDiscipline;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetTendency;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetMagicDomain;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetPurse;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetWounds;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetStatistic;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Univertuel\Prophecy\Game\Stat\Age;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Omen;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use App\Entity\Univertuel\Prophecy\Game\Stat\Age;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetAttributes;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics;
-use App\Entity\Univertuel\Prophecy\Sheet\SheetSkills;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Caste;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetPurse;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetSkills;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetWounds;
+use App\Form\Univertuel\Prophecy\Sheet\SheetFormType;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetTendency;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetStatistic;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetAttributes;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetDiscipline;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetMagicDomain;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic;
-use App\Form\Univertuel\Prophecy\Sheet\SheetCaracteristicsFormType;
+use App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Form\Univertuel\Prophecy\Game\Stat\CaracteristicFormType;
-use Doctrine\Common\Collections\ArrayCollection;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Univertuel\Prophecy\Sheet\SheetCaracteristicsFormType;
+use App\Form\Univertuel\Prophecy\Sheet\SheetCaracteristicsEditFormType;
+use App\Form\Univertuel\Prophecy\Sheet\SheetEditFormType;
 
 
 class SheetController extends AbstractController
@@ -288,25 +289,47 @@ class SheetController extends AbstractController
         $sheet = $sheetRepository->find($id_sheet);
         $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
         $sheetCaracteristics = $sheetCaracteristicsRepository->findBy(['sheet' => $sheet]);
+   
+        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['sheetCaracteristics' => $sheetCaracteristics]);
+    }
 
-        foreach ($sheetCaracteristics as $carac)
+    /**
+     * 
+     * @param Request $request
+     * @param int sheet $id 
+     * @return \Symfony\Component\HttpFoundation\Response
+     * Role : traitement du formulaire des caractéristiques à la création du personnage
+     * TODO gerer les modif dus a l age
+     * TOD transformer l'input en select et ajouter une liste de valeurs
+     */
+    public function sheetCaracteristicsEdit (Request $request, $id)
+    {
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id);
+        $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
+        $sheetCaracteristics = $sheetCaracteristicsRepository->findBy(['sheet' => $sheet]);
+        $em = $this->getDoctrine()->getManager();
+
+        $caracteristicRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic');
+        foreach ($sheetCaracteristics as $element)
         {
-            $sheet->addCaracteristic($carac);
+            $carac = $sheetCaracteristicsRepository->find($element->getId());
+            $caracId = $carac->getCaracteristic()->getId();
+            if(isset($_POST["$caracId"]))
+            {
+                $carac->setValue($_POST["$caracId"]);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($carac);
+            }
+            $em->flush();
         }
         
+        return $this->render('platform/member/sheet/form_sheet_new_step3.html.twig');
+    }
+    
+    public function sheetSelectMajorAttributes($id_sheet)
+    {
         
-        //$form = $this->createForm(SheetCaracteristicsFormType::class, $sheetCaracteristics);
-        //if($form->isSubmitted() && $forms->isValid())
-        {
-            //$em = $this->getDoctrine()->getManager();
-            //$em->persist($sheet);
-            //$em->flush();
-            //return $this->redirectToRoute('sheet_select_caracteristics',['id' => $campaign->getId(),'id_sheet' => $sheet->getId() ]);
-        }
-        
-        
-        
-        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['sheet' => $sheetCaracteristics]);
     }
     
     

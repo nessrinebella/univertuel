@@ -14,10 +14,18 @@
 	<a href="">etape 1</a><a href="">etape2</a><a href="">etape 3</a><a href="">etape4</a>
 </div>
 
-{% for carac in sheet %}
-{{carac}}{{ carac.value}}
-{% endfor %}	
+<form method="post" action="{{path('edit_caracteristics', {'id': sheetCaracteristics[0].sheet.id })}}">
 
+{% for caracteristic in sheetCaracteristics  %}
+
+<div>
+	<label>{{caracteristic.caracteristic.id}}</label><label>{{ caracteristic.caracteristic.code }}</label><input type="Number" name="{{caracteristic.caracteristic.id}}" value={{caracteristic.value}}>	
+</div>
+
+{% endfor %}
+
+<input type="submit"  value="enregistrer">
+</form>
 	
 {% endblock %}
 

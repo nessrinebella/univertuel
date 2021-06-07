@@ -56,7 +56,7 @@ class SheetCaracteristics
     public function getCaracteristic(): ?Caracteristic
     
     {
-        return $this->caracteristic->getCode();
+        return $this->caracteristic;
 
     }
 

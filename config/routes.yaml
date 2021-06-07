@@ -111,6 +111,9 @@ sheet_select_caracteristics:
     path: /member/campaign/{id}/sheet/{id_sheet}/select-caracteristics
     controller: App\Controller\Univertuel\Sheet\SheetController::sheetSelectCaracteristics
 
+edit_caracteristics:
+    path: /member/campaign/sheet/{id}/caracteristics/edit
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetCaracteristicsEdit
 
  
  

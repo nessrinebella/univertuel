@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic;
+use App\Form\Univertuel\Prophecy\Game\Stat\CaracteristicFormType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SheetCaracteristicsFormType extends AbstractType
@@ -18,24 +19,22 @@ class SheetCaracteristicsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('caracteristics', CollectionType::class, [
-                'entry_type' => Caracteristic::class,
-                'allow_add' => true,
-            ])
-            ->add('value', CollectionType::class, [
-                'entry_type' => TextType::class,
-                'allow_add' => true,
-            ])
-            ->add('submit', SubmitType::class)
+        ->add('value', TextType::class)
+        ->add('caracteristic', CollectionType::class, [
+            'entry_type' => new CaracteristicFormType (),
+            'allow_add' => true,
+
+        ])
 
         ;
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => SheetCaracteristics::class,
-            //'data_class' => null,
+         'data_class' => SheetCaracteristics::class,
+         
         ]);
     }
 }
