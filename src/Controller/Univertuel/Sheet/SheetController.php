@@ -31,8 +31,9 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Form\Univertuel\Prophecy\Game\Stat\CaracteristicFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Univertuel\Prophecy\Sheet\SheetCaracteristicsFormType;
-use App\Form\Univertuel\Prophecy\Sheet\SheetCaracteristicsEditFormType;
 use App\Form\Univertuel\Prophecy\Sheet\SheetEditFormType;
+use App\Form\Univertuel\Prophecy\Sheet\SheetAttributesFormType;
+use App\Repository\Univertuel\Prophecy\Game\Stat\WoundsRepository;
 
 
 class SheetController extends AbstractController
@@ -290,7 +291,7 @@ class SheetController extends AbstractController
         $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
         $sheetCaracteristics = $sheetCaracteristicsRepository->findBy(['sheet' => $sheet]);
    
-        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['sheetCaracteristics' => $sheetCaracteristics]);
+        return $this->render('platform/member/sheet/form_sheet_new_step2.html.twig', ['sheetCaracteristics' => $sheetCaracteristics, 'campaign' => $campaign]);
     }
 
     /**
@@ -302,10 +303,12 @@ class SheetController extends AbstractController
      * TODO gerer les modif dus a l age
      * TOD transformer l'input en select et ajouter une liste de valeurs
      */
-    public function sheetCaracteristicsEdit (Request $request, $id)
+    public function sheetCaracteristicsEdit (Request $request, $id, $campaign)
     {
         $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
         $sheet = $sheetRepository->find($id);
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
         $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
         $sheetCaracteristics = $sheetCaracteristicsRepository->findBy(['sheet' => $sheet]);
         $em = $this->getDoctrine()->getManager();
@@ -318,19 +321,291 @@ class SheetController extends AbstractController
             if(isset($_POST["$caracId"]))
             {
                 $carac->setValue($_POST["$caracId"]);
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($carac);
             }
             $em->flush();
         }
         
+        return $this->redirectToRoute('sheet_select_major_attributes', ['campaign' => $campaign->getId(), 'id_sheet' => $sheet->getId()]);
+    }
+   
+    public function sheetSelectMajorAttributes(Request $request,$id_sheet, $campaign)
+    {
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id_sheet);
+        $sheetAttributesRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetAttributes');
+        $sheetAttributes = $sheetAttributesRepository->findBy(['sheet' => $sheet]);
+        
+        return $this->render('platform/member/sheet/form_sheet_new_step4.html.twig', ['sheetAttributes' => $sheetAttributes, 'campaign' => $campaign]);
+    }
+    
+    public function sheetMajorAttributesEdit(Request $request,$id_sheet, $campaign)
+    {
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id_sheet);
+        $sheetAttributesRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetAttributes');
+        $sheetAttributes = $sheetAttributesRepository->findBy(['sheet' =>$sheet]);
+        $em = $this->getDoctrine()->getManager();
+        $attributeRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Game\Stat\Attribute');
+        foreach ($sheetAttributes as $element)
+        {
+            $attribute = $sheetAttributesRepository->find($element->getId());
+            $attributeId = $attribute->getId();
+            if(isset($_POST["$attributeId"]))
+            {
+                $attribute->setValue($_POST["$attributeId"]);
+                $em->persist($attribute);
+            }
+            $em->flush();
+        }
+        
+        return $this->redirectToRoute('sheet_set_initiative', ['id_sheet' => $sheet->getId(), 'campaign' => $campaign->getId()]);
+        //return $this->render('platform/member/sheet/form_sheet_new_step4.html.twig',['sheetAttributes' => $sheetAttributes, 'campaign' => $campaign]);
+    }
+    
+    public function sheetSetInitiative ($id_sheet, $campaign)
+    {
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id_sheet);
+        $caracteristicRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic');
+        $coordination = $caracteristicRepository->findOneBy(['name' => 'coordination']);
+        $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
+        $coo = $sheetCaracteristicsRepository->findOneBy(['sheet' => $sheet, 'caracteristic' =>$coordination]);
+        $perception = $caracteristicRepository->findOneBy(['name' => 'perception']);
+        $per = $sheetCaracteristicsRepository->findOneBy(['sheet' => $sheet, 'caracteristic' =>$perception]);
+        $value = $per->getValue()+$coo->getValue();
+        
+        $initiative = 0;
+        switch($value)
+        {
+            case $value < 6:
+                $initiative = 1;
+                break;
+                
+            case $value < 10: 
+                $initiative = 2;
+                break;
+            
+            case $value < 14:
+                $initiative = 3;
+                break;
+                
+            case $value < 17:
+                $initiative = 4;
+                break;
+                
+            default:
+                $initiative = 5;
+                break;
+                
+        }
+        $sheet->setInitiative($initiative);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sheet);
+        $em->flush();
+        
+        //a enlever, rediriger vers la prochaine etape
+       
+        return $this->redirectToRoute('sheet_set_wounds',['id_sheet' => $sheet->getId(), 'campaign' => $campaign->getId()]);
+    }
+    
+    public function sheetInitWounds ($id_sheet, $campaign)
+    {
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id_sheet);
+        
+        //get sum(volonte+resistance of sheet)
+        $caracteristicRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Game\Stat\Caracteristic');
+        $resistance = $caracteristicRepository->findOneBy(['name' => 'resistance']);
+        $sheetCaracteristicsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetCaracteristics');
+        $res = $sheetCaracteristicsRepository->findOneBy(['sheet' => $sheet, 'caracteristic' =>$resistance]);
+        $volonte = $caracteristicRepository->findOneBy(['name' => 'volonte']);
+        $vol = $sheetCaracteristicsRepository->findOneBy(['sheet' => $sheet, 'caracteristic' =>$volonte]);
+        $sum = $res->getValue() + $vol->getValue(); 
+        
+        $woundsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Game\Stat\Wounds');
+        $sheetWoundsRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\SheetWounds');
+        $em = $this->getDoctrine()->getManager();
+        $egratignure = $woundsRepository->findOneBy(['name' => 'egratignure']);
+        $legere = $woundsRepository->findOneBy(['name' => 'legere']);
+        $grave = $woundsRepository->findOneBy(['name' => 'grave']);
+        $fatale = $woundsRepository->findOneBy(['name' => 'fatale']);
+        $mort = $woundsRepository->findOneBy(['name' => 'mort']);
+        
+        switch($sum)
+        {
+            case $sum < 5:
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $egratignure, 'sheet' => $sheet]);
+                $sheetWounds->setMaxVal(3);
+                $sheetWounds->setCurrentValue(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $legere, 'sheet' => $sheet])->setMaxVal(1);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $grave, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $fatale, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $mort, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();     
+                break;   
+                
+            case $sum < 10:
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $egratignure, 'sheet' => $sheet]);
+                $sheetWounds->setMaxVal(3);
+                $sheetWounds->setCurrentValue(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $legere, 'sheet' => $sheet])->setMaxVal(1);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $grave, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $fatale, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $mort, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                break;
+                
+            case $sum < 15:
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $egratignure, 'sheet' => $sheet]);
+                $sheetWounds->setMaxVal(3);
+                $sheetWounds->setCurrentValue(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $legere, 'sheet' => $sheet])->setMaxVal(1);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $grave, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $fatale, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $mort, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                break;
+            
+            case $sum < 20:
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $egratignure, 'sheet' => $sheet]);
+                $sheetWounds->setMaxVal(3);
+                $sheetWounds->setCurrentValue(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $legere, 'sheet' => $sheet])->setMaxVal(1);
+                $sheetWounds->setCurrentValue(3);
+                $sheetWounds->setMaxVal(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $grave, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $fatale, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $mort, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                break;
+                
+            case $sum < 25:
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $egratignure, 'sheet' => $sheet]);
+                $sheetWounds->setMaxVal(3);
+                $sheetWounds->setCurrentValue(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $legere, 'sheet' => $sheet])->setMaxVal(1);
+                $sheetWounds->setCurrentValue(4);
+                $sheetWounds->setMaxVal(4);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $grave, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(3);
+                $sheetWounds->setMaxVal(3);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $fatale, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(2);
+                $sheetWounds->setMaxVal(2);
+                $em->persist($sheetWounds);
+                $em->flush();
+                
+                $sheetWounds = $sheetWoundsRepository->findOneBy(['wounds' => $mort, 'sheet' => $sheet]);
+                $sheetWounds->setCurrentValue(1);
+                $sheetWounds->setMaxVal(1);
+                $em->persist($sheetWounds);
+                $em->flush();
+                break;
+                
+        }
+        //a enlever et modifier par la prochaine etape
         return $this->render('platform/member/sheet/form_sheet_new_step3.html.twig');
     }
-    
-    public function sheetSelectMajorAttributes($id_sheet)
-    {
-        
-    }
-    
+
     
 }
