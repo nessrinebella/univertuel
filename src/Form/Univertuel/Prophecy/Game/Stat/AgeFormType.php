@@ -18,7 +18,12 @@ class AgeFormType extends AbstractType
             ->add('code', TextType::class)
             ->add('minVal', NumberType::class)
             ->add('maxVal', NumberType::class)
+            ->add('attribute1', NumberType::class)
+            ->add('attribute2', NumberType::class)
+            ->add('attribute3', NumberType::class)
+            ->add('attribute4', NumberType::class)
             ->add('submit', SubmitType::class)
+          
         ;
     }
 

@@ -35,6 +35,7 @@ use App\Form\Univertuel\Prophecy\Sheet\SheetEditFormType;
 use App\Form\Univertuel\Prophecy\Sheet\SheetAttributesFormType;
 use App\Repository\Univertuel\Prophecy\Game\Stat\WoundsRepository;
 
+//TODO : mettre dans une fonction(private?) le chargement de certaines donnees comme sheet et campaign
 
 class SheetController extends AbstractController
 {
@@ -604,8 +605,75 @@ class SheetController extends AbstractController
                 
         }
         //a enlever et modifier par la prochaine etape
-        return $this->render('platform/member/sheet/form_sheet_new_step3.html.twig');
+        //return $this->render('platform/member/sheet/form_sheet_new_step3.html.twig');
+        return $this->redirectToRoute('sheetInitChanceMastery', ['id_sheet' => $sheet->getId(), 'campaign' => $campaign->getId()]);
     }
+    
+    //travailler a base de formulaire de sheet
+    public function sheetInitChanceMastery (Request $request, $id_sheet, $campaign)
+    {
+        $campaignRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Campaign\Campaign');
+        $campaign = $campaignRepository->find($campaign);
+        $sheetRepository = $this->getDoctrine()->getRepository('App\Entity\Univertuel\Prophecy\Sheet\Sheet');
+        $sheet = $sheetRepository->find($id_sheet);
+        
+        $points = 0;
+        $age = $sheet->getAge()->getCode();
+        switch($age)
+        {
+            case $result = hash_equals($age,"enfant")     :
+                $sheet->setChance(4);
+                $points = 3;
+                break;
+            case $result = hash_equals($age,"adolescent") :
+                $sheet->setChance(2);
+                $points = 4;
+                break;
+            case $result = hash_equals($age,"adulte")     :
+                $points = 6;
+                break;
+            case $result = hash_equals($age,"ancien")     :
+                $sheet->setMastery(2);
+                $points = 4;
+                break;
+            case $result = hash_equals($age,"venerable")  :
+                $sheet->setMastery(4);
+                $points = 3;
+                break;
+                
+        }
+        $form = $this->createFormBuilder($sheet)
+        ->add('mastery', NumberType::class)
+        ->add('chance', NumberType::class)
+        ->add('submit', SubmitType::class)
+        ->getForm();
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($sheet);
+            $em->flush();
+            return $this->render('platform/member/sheet/form_sheet_new_step3.html.twig');
+        }
+        return $this->render('platform/member/sheet/form_sheet_new_step6.html.twig', ['form' => $form->createView(), 'points' => $points]);
+    }
+    
+    //public function sheetInitTendencies()
+    
+    //public function sheetInitDisadvantages()
+    
+    //public function sheetInitAdvantages()
+    
+    //public function sheetInitCasteSkills()
+    
+    //public function sheetInitSkills ()
+    
+    //public function sheetInitPrivilege() attention, la classe Privilege n est pas encore cree
+    
+    //public function sheetInitFamous()
+    
+    //public function sheetInitMagicalPower ()
 
     
 }

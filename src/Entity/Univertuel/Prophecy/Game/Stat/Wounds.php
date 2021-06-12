@@ -70,7 +70,20 @@ class Wounds
 
     public function setMalus(int $malus): self
     {
-        $this->malus = $malus;
+        if($malus != 0 && $malus < 0)
+        {
+            $this->malus = $malus;
+        }
+        
+        else if($malus != 0 && $malus > 0)
+        {
+            $this->malus = -$malus;
+        }
+        
+        else 
+        {
+            $this->malus = 0;
+        }
 
         return $this;
     }

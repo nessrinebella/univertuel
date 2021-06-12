@@ -14,7 +14,7 @@
 	<a href="">etape 1</a><a href="">etape2</a><a href="">etape 3</a><a href="">etape4</a>
 </div>
 
-<form method="post" action="{{path('edit_caracteristics', {'id': sheetCaracteristics[0].sheet.id })}}">
+<form method="post" action="{{path('edit_caracteristics', {'id': sheetCaracteristics[0].sheet.id, 'campaign': campaign.id })}}">
 
 {% for caracteristic in sheetCaracteristics  %}
 

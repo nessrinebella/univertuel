@@ -112,8 +112,27 @@ sheet_select_caracteristics:
     controller: App\Controller\Univertuel\Sheet\SheetController::sheetSelectCaracteristics
 
 edit_caracteristics:
-    path: /member/campaign/sheet/{id}/caracteristics/edit
+    path: /member/campaign/{campaign}/sheet/{id}/caracteristics/edit
     controller: App\Controller\Univertuel\Sheet\SheetController::sheetCaracteristicsEdit
+    
+sheet_select_major_attributes:
+    path: /member/campaign/{campaign}/sheet/{id_sheet}/major-attributes/select
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetSelectMajorAttributes
 
- 
+edit_major_attributes:
+    path: /member/campaign/{campaign}/sheet/{id_sheet}/major-attributes/edit
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetMajorAttributesEdit 
+
+sheet_set_initiative:
+    path: /member/campaign/{campaign}/sheet/{id_sheet}/initiative/edit
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetSetInitiative
+
+sheet_set_wounds:
+    path: /member/campaign/{campaign}/sheet/{id_sheet}/wounds/init
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetInitWounds
+
+sheetInitChanceMastery:
+    path: /member/campaign/{campaign}/sheet/{id_sheet}/chance-mastery/init
+    controller: App\Controller\Univertuel\Sheet\SheetController::sheetInitChanceMastery
+    
  
